@@ -113,7 +113,7 @@ const MODULES = [
     name: "Airline",
     icon: Plane,
     methods: ["Search fares", "Book"],
-    providers: [{ name: "Juyonna" }],
+    providers: [{ name: "Travel Base" }],
   },
   {
     id: "insurance",
@@ -139,6 +139,15 @@ const MODULES = [
     icon: Truck,
     methods: ["Create shipment", "Track"],
     providers: [{ name: "Chowdeck" }],
+  },
+  {
+    id: "gov-services",
+    group: "addendum",
+    name: "Government Services",
+    icon: Landmark,
+    methods: ["Submit application", "Verify status"],
+    providers: [],
+    note: "Provider not yet selected — contract is ready.",
   },
 ];
 
@@ -386,7 +395,7 @@ export default function GetlyArchitecture() {
         {renderGroup(
           "addendum",
           "Addendum",
-          "insurance · discovery · logistics"
+          "insurance · discovery · logistics · gov services"
         )}
 
         <div className="mb-8 rounded-xl border border-slate-200 bg-white p-4">
