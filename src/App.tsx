@@ -5,12 +5,14 @@ import {
   Building2,
   Layers,
   Wallet,
+  Globe,
   ExternalLink,
   ArrowRight,
 } from "lucide-react";
 import Architecture from "./pages/architecture";
 import FloatSystem from "./pages/float-system";
 import SecondaryFloatSystem from "./pages/secondary-float-system";
+import HostCountry from "./pages/host-country";
 
 const CONCEPTS = [
   {
@@ -38,6 +40,15 @@ const CONCEPTS = [
     desc: "The extended float model — service floats, provider accounts, and payout endpoints reconciled against the core ledger.",
     tags: ["Service Float", "Payouts", "Treasury"],
     route: "/secondary-float-system",
+    doc: "https://docs.google.com/document/d/1yYD_61e_GMbNp2UKJtTb9Dt2GCar81SNlHSIB6D_0yo/edit?usp=sharing",
+  },
+  {
+    id: "host-country",
+    name: "Host Country Mechanism",
+    icon: Globe,
+    desc: "How a traveller's host country shapes everything — from wallet display currency to provider routing to payout rails.",
+    tags: ["USDC", "Host Country", "Wallet", "Routing"],
+    route: "/host-country",
     doc: "https://docs.google.com/document/d/1yYD_61e_GMbNp2UKJtTb9Dt2GCar81SNlHSIB6D_0yo/edit?usp=sharing",
   },
 ];
@@ -174,6 +185,7 @@ function App() {
       <Route path="/architecture" element={<Architecture />} />
       <Route path="/float-system" element={<FloatSystem />} />
       <Route path="/secondary-float-system" element={<SecondaryFloatSystem />} />
+      <Route path="/host-country" element={<HostCountry />} />
       <Route path="/" element={<Landing />} />
     </Routes>
   );

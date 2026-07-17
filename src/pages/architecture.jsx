@@ -12,6 +12,9 @@ import {
   Bell,
   Mail,
   Smartphone,
+  DollarSign,
+  Landmark,
+  Building2,
 } from "lucide-react";
 
 const COUNTRIES = [
@@ -21,6 +24,15 @@ const COUNTRIES = [
 ];
 
 const MODULES = [
+  {
+    id: "wallet",
+    group: "core",
+    name: "USDC Wallet",
+    icon: Wallet,
+    methods: ["Provision", "Fund", "Display balance"],
+    providers: [{ name: "Cycle" }],
+    note: "User's primary and only wallet. Hidden — displayed as host/local currency, not USDC.",
+  },
   {
     id: "kyc",
     group: "gate",
@@ -37,10 +49,18 @@ const MODULES = [
     icon: CreditCard,
     methods: ["Create", "Fund", "Freeze"],
     providers: [
-      { name: "Sudo", tag: "Physical card" },
-      { name: "Bitnob", tag: "Virtual card" },
+      {
+        name: "Bridge",
+        tag: "Recommended",
+        note: "Stripe company. Stablecoin-native card issuance — spend directly from USDC. Multi-country coverage.",
+      },
+      {
+        name: "Lithic",
+        tag: "US-only",
+        note: "Issues cards to US citizens/residents only. Expanding internationally but no current path for Getly's traveller base.",
+      },
     ],
-    note: "Routed by card type, not country.",
+    note: "Bridge is the stronger structural fit — USDC-native card issuance. Lithic is US-only for now.",
   },
   {
     id: "esim",
@@ -55,14 +75,37 @@ const MODULES = [
     id: "payment",
     group: "main",
     name: "Payment",
-    icon: Wallet,
-    methods: ["Charge", "Payout", "Refund"],
-    providers: [
-      { name: "Flutterwave", countries: ["UK", "UAE"] },
-      { name: "Sudo", countries: ["NG"], tag: "NGN rails" },
+    icon: DollarSign,
+    channels: [
+      {
+        name: "Payins",
+        icon: Landmark,
+        purpose: "Fund the USDC wallet. Nothing else — no feature ever pulls a payin directly.",
+        providers: [
+          { name: "Local providers", countries: ["NG"], tag: "Local / USD" },
+          { name: "Virtual card", tag: "USD" },
+        ],
+      },
+      {
+        name: "Service Pays",
+        icon: CreditCard,
+        purpose: "Pay for anything inside the app — cards, eSIMs — always from the USDC wallet.",
+        providers: [
+          { name: "Card providers", tag: "Bridge / Lithic" },
+          { name: "eSIM providers", tag: "eSIM Access" },
+        ],
+      },
+      {
+        name: "Payouts",
+        icon: Building2,
+        purpose: "Money leaving the system — virtual card spend (reconciliation only) and local bank transfers.",
+        providers: [
+          { name: "Virtual card", tag: "USD" },
+          { name: "Local bank transfer", tag: "USD / Local" },
+          { name: "Service providers", tag: "Implementation" },
+        ],
+      },
     ],
-    note: "Routed live by country.",
-    routed: true,
   },
   {
     id: "airline",
@@ -142,9 +185,9 @@ export default function GetlyArchitecture() {
                       {mod.name}
                     </div>
                     <div className="text-xs text-slate-400">
-                      {mod.providers.length || 0} provider
-                      {mod.providers.length === 1 ? "" : "s"} behind this
-                      interface
+                      {mod.channels
+                        ? `${mod.channels.length} channel${mod.channels.length === 1 ? "" : "s"}`
+                        : `${(mod.providers || []).length || 0} provider${(mod.providers || []).length === 1 ? "" : "s"} behind this interface`}
                     </div>
                   </div>
                 </div>
@@ -157,22 +200,24 @@ export default function GetlyArchitecture() {
               </button>
               {isOpen && (
                 <div className="border-t border-slate-100 bg-slate-50 px-4 py-4">
-                  <div className="mb-3 flex flex-wrap gap-2">
-                    {mod.methods.map((m) => (
-                      <span
-                        key={m}
-                        className="rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-xs text-blue-800"
-                        style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-                      >
-                        {m}()
-                      </span>
-                    ))}
-                  </div>
-                  {mod.providers.length === 0 ? (
+                  {mod.methods && (
+                    <div className="mb-3 flex flex-wrap gap-2">
+                      {mod.methods.map((m) => (
+                        <span
+                          key={m}
+                          className="rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-xs text-blue-800"
+                          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                        >
+                          {m}()
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {mod.providers && mod.providers.length === 0 ? (
                     <div className="rounded-md border border-dashed border-rose-300 bg-rose-50 px-3 py-2 text-xs text-rose-700">
                       {mod.note}
                     </div>
-                  ) : (
+                  ) : mod.providers ? (
                     <div className="flex flex-wrap gap-2">
                       {mod.providers.map((p) => {
                         const isActive = mod.routed
@@ -191,6 +236,11 @@ export default function GetlyArchitecture() {
                             {p.tag && (
                               <div className="text-xs opacity-80">{p.tag}</div>
                             )}
+                            {p.note && (
+                              <div className="mt-1 max-w-xs text-xs opacity-70">
+                                {p.note}
+                              </div>
+                            )}
                             {mod.routed && isActive && (
                               <div className="mt-1 text-xs uppercase tracking-wide text-teal-600">
                                 Active for {country}
@@ -200,10 +250,58 @@ export default function GetlyArchitecture() {
                         );
                       })}
                     </div>
-                  )}
-                  {mod.note && mod.providers.length > 0 && (
+                  ) : null}
+                  {mod.note && mod.providers && mod.providers.length > 0 && (
                     <div className="mt-2 text-xs text-slate-400">
                       {mod.note}
+                    </div>
+                  )}
+                  {mod.channels && (
+                    <div className="mt-4 space-y-3">
+                      <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        Payment channels
+                      </div>
+                      {mod.channels.map((ch) => {
+                        const ChIcon = ch.icon;
+                        return (
+                          <div
+                            key={ch.name}
+                            className="rounded-lg border border-slate-200 bg-white p-3"
+                          >
+                            <div className="mb-1.5 flex items-center gap-2">
+                              <ChIcon size={14} className="text-slate-500" />
+                              <span className="text-xs font-semibold text-slate-800">
+                                {ch.name}
+                              </span>
+                            </div>
+                            <p className="mb-2 text-xs text-slate-500">
+                              {ch.purpose}
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                              {ch.providers.map((p) => {
+                                const isActive = (p.countries || []).includes(country);
+                                return (
+                                  <div
+                                    key={p.name}
+                                    className={`rounded-md border px-2.5 py-1.5 text-xs transition-all ${
+                                      p.countries
+                                        ? isActive
+                                          ? "border-teal-300 bg-teal-50 text-teal-800"
+                                          : "border-slate-200 bg-white text-slate-400"
+                                        : "border-slate-200 bg-slate-50 text-slate-700"
+                                    }`}
+                                  >
+                                    <div className="font-semibold">{p.name}</div>
+                                    {p.tag && (
+                                      <div className="text-xs opacity-80">{p.tag}</div>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -233,7 +331,7 @@ export default function GetlyArchitecture() {
       <div className="mx-auto max-w-3xl">
         <div className="mb-8">
           <div className="mb-2 flex flex-wrap gap-2">
-            {["Go", "Fiber", "ent", "PostgreSQL"].map((t) => (
+            {["Go", "Fiber", "ent", "PostgreSQL", "USDC"].map((t) => (
               <span
                 key={t}
                 className="rounded-full border border-slate-200 bg-white px-2 py-0.5 text-xs text-slate-500"
@@ -250,34 +348,41 @@ export default function GetlyArchitecture() {
             Getly backend architecture
           </h1>
           <p className="mt-2 max-w-xl text-sm text-slate-500">
-            One interface per module. Providers plug in behind it. An admin
-            decides who serves who — by country, live, with no redeploy.
+            One interface per module. Providers plug in behind it. Every
+            traveller gets a hidden USDC wallet — host country drives provider
+            routing and display currency, live, with no redeploy.
           </p>
         </div>
 
-        <div className="mb-8 flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3">
-          <div className="text-xs font-medium uppercase tracking-wide text-slate-500">
-            Simulate: route by country
+        <div className="mb-8 rounded-xl border border-slate-200 bg-white px-4 py-3">
+          <div className="mb-2 flex items-center justify-between">
+            <div className="text-xs font-medium uppercase tracking-wide text-slate-500">
+              Simulate: route by host country
+            </div>
+            <div className="flex gap-1 rounded-lg bg-slate-100 p-1">
+              {COUNTRIES.map((c) => (
+                <button
+                  key={c.id}
+                  onClick={() => setCountry(c.id)}
+                  className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                    country === c.id
+                      ? "bg-white text-slate-900 shadow-sm"
+                      : "text-slate-500"
+                  }`}
+                >
+                  {c.label}
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="flex gap-1 rounded-lg bg-slate-100 p-1">
-            {COUNTRIES.map((c) => (
-              <button
-                key={c.id}
-                onClick={() => setCountry(c.id)}
-                className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
-                  country === c.id
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-500"
-                }`}
-              >
-                {c.label}
-              </button>
-            ))}
+          <div className="text-xs text-slate-400">
+            Host country drives provider routing and wallet display currency.
           </div>
         </div>
 
+        {renderGroup("core", "Core", "the foundation everything flows through")}
         {renderGroup("gate", "Onboarding gate", "before anything else")}
-        {renderGroup("main", "Main service", "card · eSIM · payment · airline")}
+        {renderGroup("main", "Main service", "wallet · card · eSIM · payment · airline")}
         {renderGroup(
           "addendum",
           "Addendum",
