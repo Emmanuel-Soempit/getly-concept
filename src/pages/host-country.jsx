@@ -16,7 +16,7 @@ import {
 const COUNTRIES = [
   { id: "NG", label: "Nigeria", currency: "NGN" },
   { id: "UK", label: "United Kingdom", currency: "GBP" },
-  { id: "UAE", label: "UAE", currency: "AED" },
+  { id: "QA", label: "Qatar", currency: "QAR" },
 ];
 
 const NODE_STYLES = {

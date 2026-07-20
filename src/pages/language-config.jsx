@@ -2,19 +2,19 @@ import { useState } from "react";
 import { Languages, Globe, MapPin, Home, Smartphone, Wallet, CreditCard } from "lucide-react";
 
 const COUNTRIES = [
-  { id: "NG", label: "Nigeria", originLang: "English", destLang: "English / Pidgin" },
+  { id: "NG", label: "Nigeria", originLang: "English", destLang: "English" },
   { id: "UK", label: "United Kingdom", originLang: "English", destLang: "English" },
-  { id: "UAE", label: "UAE", originLang: "English / Arabic", destLang: "Arabic / English" },
+  { id: "QA", label: "Qatar", originLang: "English / Arabic", destLang: "Arabic / English" },
 ];
 
 const MOCK_COPY = {
   fundWallet: {
-    origin: { NG: "Fund wallet", UK: "Fund wallet", UAE: "Fund wallet" },
-    destination: { NG: "Fund wallet", UK: "Fund wallet", UAE: "Add money" },
+    origin: { NG: "Fund wallet", UK: "Fund wallet", QA: "Fund wallet" },
+    destination: { NG: "Fund wallet", UK: "Fund wallet", QA: "Add money" },
   },
   payButton: {
-    origin: { NG: "Pay now", UK: "Pay now", UAE: "Pay now" },
-    destination: { NG: "Pay now", UK: "Pay now", UAE: "Pay now" },
+    origin: { NG: "Pay now", UK: "Pay now", QA: "Pay now" },
+    destination: { NG: "Pay now", UK: "Pay now", QA: "Pay now" },
   },
 };
 

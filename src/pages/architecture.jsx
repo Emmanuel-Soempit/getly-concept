@@ -20,7 +20,7 @@ import {
 const COUNTRIES = [
   { id: "NG", label: "Nigeria" },
   { id: "UK", label: "United Kingdom" },
-  { id: "UAE", label: "UAE" },
+  { id: "QA", label: "Qatar" },
 ];
 
 const MODULES = [
