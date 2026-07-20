@@ -6,6 +6,7 @@ import {
   Layers,
   Wallet,
   Globe,
+  Languages,
   ExternalLink,
   ArrowRight,
 } from "lucide-react";
@@ -13,6 +14,7 @@ import Architecture from "./pages/architecture";
 import FloatSystem from "./pages/float-system";
 import SecondaryFloatSystem from "./pages/secondary-float-system";
 import HostCountry from "./pages/host-country";
+import LanguageConfig from "./pages/language-config";
 
 const CONCEPTS = [
   {
@@ -49,6 +51,15 @@ const CONCEPTS = [
     desc: "How a traveller's host country shapes everything — from wallet display currency to provider routing to payout rails.",
     tags: ["USDC", "Host Country", "Wallet", "Routing"],
     route: "/host-country",
+    doc: "https://docs.google.com/document/d/1yYD_61e_GMbNp2UKJtTb9Dt2GCar81SNlHSIB6D_0yo/edit?usp=sharing",
+  },
+  {
+    id: "language-config",
+    name: "Language Configuration",
+    icon: Languages,
+    desc: "How the app adapts its display language to the user's origin or destination country context using i18n.",
+    tags: ["i18n", "React Native", "Localization"],
+    route: "/language-config",
     doc: "https://docs.google.com/document/d/1yYD_61e_GMbNp2UKJtTb9Dt2GCar81SNlHSIB6D_0yo/edit?usp=sharing",
   },
 ];
@@ -186,6 +197,7 @@ function App() {
       <Route path="/float-system" element={<FloatSystem />} />
       <Route path="/secondary-float-system" element={<SecondaryFloatSystem />} />
       <Route path="/host-country" element={<HostCountry />} />
+      <Route path="/language-config" element={<LanguageConfig />} />
       <Route path="/" element={<Landing />} />
     </Routes>
   );

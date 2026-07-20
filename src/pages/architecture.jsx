@@ -358,7 +358,7 @@ export default function GetlyArchitecture() {
           </h1>
           <p className="mt-2 max-w-xl text-sm text-slate-500">
             One interface per module. Providers plug in behind it. Every
-            traveller gets a hidden USDC wallet — host country drives provider
+            traveller gets a hidden USDC wallet — destination country drives provider
             routing and display currency, live, with no redeploy.
           </p>
         </div>
@@ -366,7 +366,7 @@ export default function GetlyArchitecture() {
         <div className="mb-8 rounded-xl border border-slate-200 bg-white px-4 py-3">
           <div className="mb-2 flex items-center justify-between">
             <div className="text-xs font-medium uppercase tracking-wide text-slate-500">
-              Simulate: route by host country
+              Simulate: route by destination country
             </div>
             <div className="flex gap-1 rounded-lg bg-slate-100 p-1">
               {COUNTRIES.map((c) => (
@@ -385,7 +385,7 @@ export default function GetlyArchitecture() {
             </div>
           </div>
           <div className="text-xs text-slate-400">
-            Host country drives provider routing and wallet display currency.
+            Destination country drives provider routing and wallet display currency.
           </div>
         </div>
 
